@@ -1,114 +1,50 @@
-# PowerShell-Skript zur Initialisierung und Strukturierung eines GitHub-Repos mit Templates
 param (
     [string]$ProjectName = "MeinProjekt",
     [string]$Author = "Dein Name"
 )
 
-function Initialize-GitRepository {
-    param (
-        [string]$RepoPath
-    )
-    Write-Output "Initialisiere Git-Repository im Verzeichnis $RepoPath"
-    Set-Location -Path $RepoPath
-    git init
-    git branch -M main
-    git add .
-    git commit -m "Initial commit"
+# Template URLs
+$TemplateUrls = @{
+    "README.md"    = "https://raw.githubusercontent.com/justwaitfor-me/init/refs/heads/main/README.template.md"
+    "LICENSE"      = "https://raw.githubusercontent.com/justwaitfor-me/init/refs/heads/main/LICENSE.template"
+    ".gitignore"   = "https://raw.githubusercontent.com/justwaitfor-me/init/refs/heads/main/.gitignore.template"
+    ".env.example" = "https://raw.githubusercontent.com/justwaitfor-me/init/refs/heads/main/.env.example.template"
+}
+
+# Initialize Git repository
+function Init-GitRepo {
+    $repoPath = "$PSScriptRoot\..\$ProjectName" # Place in parent directory
+    Set-Location -Path $repoPath
+    if (-not (Test-Path ".git")) {
+        git init
+        git branch -M main
+        git add . 
+        git commit -m "Initial commit"
+        "Branches created." | Write-Output
+    }
+    else { "Git repository already initialized." | Write-Output }
     
-    # Optionale Branches erstellen
-    git branch develop
-    git branch feature/template
-    git branch bugfix/template
+    # Create branches if not exist
+    "develop", "feature/template", "bugfix/template" | ForEach-Object {
+        if (-not (git branch --list $_)) { git branch $_; "$_ branch created." | Write-Output }
+    }
     git checkout main
-
-    Write-Output "Repository initialisiert und Branches erstellt."
 }
 
-function Create-ProjectStructure {
-    param (
-        [string]$RepoPath,
-        [string]$Author,
-        [string]$ProjectName
-    )
+# Create project structure and download templates
+function Create-Project {
+    $repoPath = "$PSScriptRoot\..\$ProjectName" # Place in parent directory
+    if (-not (Test-Path $repoPath)) { New-Item -ItemType Directory -Path $repoPath }
+    "src", "tests", "config", "docs", "scripts" | ForEach-Object { New-Item -ItemType Directory -Path "$repoPath\$_" }
 
-    # Projektverzeichnis erstellen
-    if (!(Test-Path -Path $RepoPath)) {
-        New-Item -ItemType Directory -Path $RepoPath
-    }
-
-    # Ordnerstruktur
-    $folders = @("src", "tests", "config", "docs", ".github/workflows", "scripts")
-    foreach ($folder in $folders) {
-        New-Item -ItemType Directory -Path "$RepoPath/$folder" -Force
-    }
-    
-    # Template-Verzeichnis ermitteln
-    $scriptDir = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-
-    # Dateien aus Templates erstellen
-    Copy-TemplateFile -TemplatePath "$scriptDir/README.template.md" -DestinationPath "$RepoPath/README.md" -Placeholders @{ ProjectName = $ProjectName; Author = $Author }
-    Copy-TemplateFile -TemplatePath "$scriptDir/LICENSE.template" -DestinationPath "$RepoPath/LICENSE" -Placeholders @{ Author = $Author; Year = (Get-Date -Year).Year }
-    Copy-TemplateFile -TemplatePath "$scriptDir/.gitignore.template" -DestinationPath "$RepoPath/.gitignore"
-    Copy-TemplateFile -TemplatePath "$scriptDir/.env.example.template" -DestinationPath "$RepoPath/.env.example"
-
-    # GitHub Actions Workflow-Template erstellen
-    $workflowContent = @"
-name: CI/CD Pipeline
-
-on:
-  push:
-    branches:
-      - main
-      - develop
-  pull_request:
-    branches:
-      - main
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-      - run: npm install
-      - run: npm test
-"@
-    Set-Content -Path "$RepoPath/.github/workflows/ci.yml" -Value $workflowContent
-
-    Write-Output "Projektstruktur und Templates erstellt."
-}
-
-function Copy-TemplateFile {
-    param (
-        [string]$TemplatePath,
-        [string]$DestinationPath,
-        [hashtable]$Placeholders = @{}
-    )
-
-    if (Test-Path -Path $TemplatePath) {
-        # Template-Inhalt lesen
-        $content = Get-Content -Path $TemplatePath -Raw
-
-        # Platzhalter ersetzen
-        foreach ($key in $Placeholders.Keys) {
-            $content = $content -replace "\{\{$key\}\}", $Placeholders[$key]
-        }
-
-        # Inhalt in die Zieldatei schreiben
-        Set-Content -Path $DestinationPath -Value $content
-        Write-Output "Datei $DestinationPath wurde aus Template $TemplatePath erstellt."
-    }
-    else {
-        Write-Output "Template-Datei $TemplatePath nicht gefunden."
+    # Download template files
+    $TemplateUrls.GetEnumerator() | ForEach-Object { 
+        Invoke-WebRequest -Uri $_.Value -OutFile "$repoPath\$($_.Key)" 
+        "$($_.Key) downloaded." | Write-Output
     }
 }
 
-# Hauptskript
-$repoPath = "$PSScriptRoot/$ProjectName"
-Create-ProjectStructure -RepoPath $repoPath -Author $Author -ProjectName $ProjectName
-Initialize-GitRepository -RepoPath $repoPath
-Write-Output "Projekt $ProjectName wurde erfolgreich erstellt und initialisiert."
+# Main
+Create-Project
+Init-GitRepo
+"Project $ProjectName initialized." | Write-Output
