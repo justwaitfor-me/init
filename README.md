@@ -42,13 +42,13 @@ This PowerShell script is designed to set up a new GitHub repository with a stan
 1. Clone this repository:
 
     ```bash
-    git clone <URL_TO_THIS_REPOSITORY>
+    git clone https://github.com/justwaitfor-me/init.git
     ```
 
 2. Navigate to the cloned repository:
 
     ```bash
-    cd <repository_name>
+    cd init
     ```
 
 3. Ensure the following template files are present in the repository directory:
