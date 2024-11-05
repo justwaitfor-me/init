@@ -67,7 +67,6 @@ The script accepts the following parameters:
 
 - `ProjectName`: The name of your project (default is `"MeinProjekt"`).
 - `Author`: The name of the project's author (default is `"Dein Name"`).
-- `LicenseType`: The type of license to use, e.g., `"MIT"` or `"Apache-2.0"` (default is `"MIT"`).
 
 ### Running the Script
 
