@@ -1,4 +1,4 @@
-# YourProjectName
+# {{project_name}}
 
 ## Table of Contents
 
@@ -15,13 +15,13 @@
 
 ## Introduction
 
-Welcome to **YourProjectName**! This project aims to [briefly describe the purpose and goals of the project]. Whether you're here to contribute or use this software, you'll find everything you need to get started in this repository.
+Welcome to **{{project_name}}**! This project aims to [briefly describe the purpose and goals of the project]. Whether you're here to contribute or use this software, you'll find everything you need to get started in this repository.
 
 ## Project Structure
 
 This project is organized in the following structure:
 
-YourProjectName/ ├── .github/ # GitHub workflows and CI/CD configuration │ └── workflows/ │ └── ci.yml # Basic GitHub Actions workflow ├── config/ # Configuration files for project setup ├── docs/ # Documentation files ├── src/ # Main source code directory ├── tests/ # Test files and test suite ├── scripts/ # Automation and utility scripts ├── README.md # Project description ├── LICENSE # License file for the project ├── .gitignore # Git ignore file for unnecessary files └── .env.example # Example environment file
+{{project_name}}/ ├── .github/ # GitHub workflows and CI/CD configuration │ └── workflows/ │ └── ci.yml # Basic GitHub Actions workflow ├── config/ # Configuration files for project setup ├── docs/ # Documentation files ├── src/ # Main source code directory ├── tests/ # Test files and test suite ├── scripts/ # Automation and utility scripts ├── README.md # Project description ├── LICENSE # License file for the project ├── .gitignore # Git ignore file for unnecessary files └── .env.example # Example environment file
 
 
 ### Explanation of Directories and Files
@@ -48,7 +48,7 @@ YourProjectName/ ├── .github/ # GitHub workflows and CI/CD configuration �
 
 ## Installation
 
-Follow these steps to get **YourProjectName** up and running on your local machine:
+Follow these steps to get **{{project_name}}** up and running on your local machine:
 
 ### Prerequisites
 
@@ -61,11 +61,11 @@ Follow these steps to get **YourProjectName** up and running on your local machi
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/YourProjectName.git
+   git clone https://github.com/{{author_name}}/{{project_name}}.git
 
 Navigate into the project directory:
 
-cd YourProjectName
+cd {{project_name}}
 Install dependencies:
 
 If using Node.js:
@@ -103,7 +103,7 @@ python app.py
 Make sure to check the docs/ directory for additional usage instructions and examples, particularly for any specific commands or tools related to the project.
 
 Testing
-YourProjectName uses [your test framework] for unit and integration testing. To run the tests:
+{{project_name}} uses [your test framework] for unit and integration testing. To run the tests:
 
 Ensure you have installed the necessary dependencies (see Installation).
 Run the test suite:
