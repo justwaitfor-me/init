@@ -75,7 +75,7 @@ The script accepts the following parameters:
 2. Run the script with the following command:
 
     ```powershell
-    .\initialize-repo.ps1 -ProjectName "YourProjectName" -Author "Your Name" -LicenseType "MIT"
+    .\initialize-repo.ps1 -ProjectName "YourProjectName" -Author "Your Name" 
     ```
 
 3. After running, a new folder with the specified project name will be created, and the repository will be initialized inside this folder.
