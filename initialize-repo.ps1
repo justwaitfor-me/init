@@ -5,10 +5,11 @@ param (
 
 # Template URLs
 $TemplateUrls = @{
-    "README.md"    = "https://raw.githubusercontent.com/justwaitfor-me/init/refs/heads/main/README.template.md"
-    "LICENSE"      = "https://raw.githubusercontent.com/justwaitfor-me/init/refs/heads/main/LICENSE.template"
-    ".gitignore"   = "https://raw.githubusercontent.com/justwaitfor-me/init/refs/heads/main/.gitignore.template"
-    ".env.example" = "https://raw.githubusercontent.com/justwaitfor-me/init/refs/heads/main/.env.example.template"
+    "README.md"           = "https://raw.githubusercontent.com/justwaitfor-me/init/refs/heads/main/README.template.md"
+    "LICENSE"             = "https://raw.githubusercontent.com/justwaitfor-me/init/refs/heads/main/LICENSE.template"
+    ".gitignore"          = "https://raw.githubusercontent.com/justwaitfor-me/init/refs/heads/main/.gitignore.template"
+    ".env.example"        = "https://raw.githubusercontent.com/justwaitfor-me/init/refs/heads/main/.env.example.template"
+    ".vscode\launch.json" = "https://raw.githubusercontent.com/justwaitfor-me/init/refs/heads/main/.vscode/launch.json.template"
 }
 
 # Initialize Git repository
@@ -35,11 +36,15 @@ function Init-GitRepo {
 function Create-Project {
     $repoPath = "$PSScriptRoot\..\$ProjectName" # Place in parent directory
     if (-not (Test-Path $repoPath)) { New-Item -ItemType Directory -Path $repoPath }
-    "src", "tests", "config", "docs", "scripts" | ForEach-Object { New-Item -ItemType Directory -Path "$repoPath\$_" }
+    "src", "tests", "config", "docs", "scripts", ".vscode" | ForEach-Object { New-Item -ItemType Directory -Path "$repoPath\$_" -Force }
 
     # Download template files
     $TemplateUrls.GetEnumerator() | ForEach-Object { 
-        Invoke-WebRequest -Uri $_.Value -OutFile "$repoPath\$($_.Key)" 
+        $filePath = "$repoPath\$($_.Key)"
+        $folderPath = Split-Path -Path $filePath -Parent
+        if (-not (Test-Path $folderPath)) { New-Item -ItemType Directory -Path $folderPath -Force }
+        
+        Invoke-WebRequest -Uri $_.Value -OutFile $filePath 
         "$($_.Key) downloaded." | Write-Output
     }
 }
