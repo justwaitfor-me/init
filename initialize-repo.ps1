@@ -9,7 +9,7 @@ $TemplateUrls = @{
     "LICENSE"             = "https://raw.githubusercontent.com/justwaitfor-me/init/refs/heads/main/LICENSE.template"
     ".gitignore"          = "https://raw.githubusercontent.com/justwaitfor-me/init/refs/heads/main/.gitignore.template"
     ".env.example"        = "https://raw.githubusercontent.com/justwaitfor-me/init/refs/heads/main/.env.example.template"
-    ".vscode\launch.json" = "https://raw.githubusercontent.com/justwaitfor-me/init/refs/heads/main/.vscode/launch.json.template"
+    ".vscode\launch.json" = "https://raw.githubusercontent.com/justwaitfor-me/init/refs/heads/main/.vscode/launch.json"
 }
 
 # Initialize Git repository
